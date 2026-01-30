@@ -1,0 +1,13 @@
+{
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "outputDirectory": ".next",
+  "env": {
+    "KV_REST_API_URL": "",
+    "KV_REST_API_TOKEN": ""
+  },
+  "regions": ["fra1"],
+  "public": false
+}
