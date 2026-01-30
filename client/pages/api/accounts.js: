@@ -1,0 +1,20 @@
+export default function handler(req, res) {
+  const accounts = [
+    {
+      id: 1,
+      title: "Премиум аккаунт",
+      description: "Старый аккаунт с историей, 2FA отключен",
+      price: 1500,
+      date: "2024-01-15"
+    },
+    {
+      id: 2,
+      title: "Базовый аккаунт",
+      description: "Новый аккаунт, готов к использованию",
+      price: 500,
+      date: "2024-01-14"
+    }
+  ]
+  
+  res.status(200).json(accounts)
+}
