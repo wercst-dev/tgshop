@@ -1,0 +1,65 @@
+import { createClient } from '@vercel/kv';
+
+// Для локальной разработки
+const kv = createClient({
+  url: process.env.KV_REST_API_URL,
+  token: process.env.KV_REST_API_TOKEN,
+});
+
+// Ключи базы данных
+const ACCOUNTS_KEY = 'telegram_accounts';
+const SETTINGS_KEY = 'app_settings';
+
+export async function getAccounts() {
+  try {
+    const accounts = await kv.get(ACCOUNTS_KEY);
+    return accounts || [];
+  } catch (error) {
+    console.error('Error getting accounts:', error);
+    return [];
+  }
+}
+
+export async function saveAccounts(accounts) {
+  try {
+    await kv.set(ACCOUNTS_KEY, accounts);
+    return true;
+  } catch (error) {
+    console.error('Error saving accounts:', error);
+    return false;
+  }
+}
+
+export async function addAccount(account) {
+  const accounts = await getAccounts();
+  const newAccount = {
+    id: Date.now().toString(),
+    ...account,
+    date: new Date().toISOString(),
+    active: true
+  };
+  
+  accounts.push(newAccount);
+  await saveAccounts(accounts);
+  return newAccount;
+}
+
+export async function updateAccount(id, updates) {
+  const accounts = await getAccounts();
+  const index = accounts.findIndex(acc => acc.id === id);
+  
+  if (index !== -1) {
+    accounts[index] = { ...accounts[index], ...updates };
+    await saveAccounts(accounts);
+    return accounts[index];
+  }
+  
+  return null;
+}
+
+export async function deleteAccount(id) {
+  const accounts = await getAccounts();
+  const filtered = accounts.filter(acc => acc.id !== id);
+  await saveAccounts(filtered);
+  return true;
+}
